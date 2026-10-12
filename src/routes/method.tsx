@@ -1,6 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { drills, stages, vocab } from "@/data/method";
+import { Access } from "@/components/pass-offer";
 import { Shell, Kicker } from "@/components/shell";
 
 export const Route = createFileRoute("/method")({ component: MethodPage });
@@ -19,6 +20,7 @@ function MethodPage() {
 
   return (
     <Shell>
+      <Access>
       <Kicker>Method</Kicker>
       <h1 className="mt-3 max-w-3xl font-serif text-4xl leading-tight font-medium text-fg md:text-5xl">
         Six stages. Low information first.
@@ -125,6 +127,15 @@ function MethodPage() {
           })}
         </ol>
       </section>
+
+      <p className="mt-12 max-w-2xl text-sm leading-relaxed text-faint">
+        Overlay is a writing rule. The course also refuses five uses of the method itself — people, medicine, legal
+        claims, money, and borrowed stamps.{" "}
+        <Link to="/" hash="exclusions" className="text-copper">
+          Read the exclusions, and why.
+        </Link>
+      </p>
+      </Access>
     </Shell>
   );
 }

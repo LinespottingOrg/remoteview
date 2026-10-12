@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { lessonById } from "@/data/course";
 import { LessonView } from "@/components/lesson-view";
+import { Access } from "@/components/pass-offer";
 import { Shell } from "@/components/shell";
 
 export const Route = createFileRoute("/course/$id")({ component: LessonPage });
@@ -17,7 +18,9 @@ function LessonPage() {
   }
   return (
     <Shell>
-      <LessonView key={lesson.id} lesson={lesson} />
+      <Access preview={lesson.id === "claim"}>
+        <LessonView key={lesson.id} lesson={lesson} />
+      </Access>
     </Shell>
   );
 }

@@ -12,9 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ArchiveRouteImport } from './routes/archive'
 import { Route as CourseRouteImport } from './routes/course'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as LabRouteImport } from './routes/lab'
 import { Route as MethodRouteImport } from './routes/method'
+import { Route as PassRouteImport } from './routes/pass'
 import { Route as CourseIdRouteImport } from './routes/course.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -32,6 +34,11 @@ const CourseRoute = CourseRouteImport.update({
   path: '/course',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JournalRoute = JournalRouteImport.update({
   id: '/journal',
   path: '/journal',
@@ -47,6 +54,11 @@ const MethodRoute = MethodRouteImport.update({
   path: '/method',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PassRoute = PassRouteImport.update({
+  id: '/pass',
+  path: '/pass',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CourseIdRoute = CourseIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -57,18 +69,22 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
   '/course': typeof CourseRouteWithChildren
+  '/faq': typeof FaqRoute
   '/journal': typeof JournalRoute
   '/lab': typeof LabRoute
   '/method': typeof MethodRoute
+  '/pass': typeof PassRoute
   '/course/$id': typeof CourseIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
   '/course': typeof CourseRouteWithChildren
+  '/faq': typeof FaqRoute
   '/journal': typeof JournalRoute
   '/lab': typeof LabRoute
   '/method': typeof MethodRoute
+  '/pass': typeof PassRoute
   '/course/$id': typeof CourseIdRoute
 }
 export interface FileRoutesById {
@@ -76,9 +92,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/archive': typeof ArchiveRoute
   '/course': typeof CourseRouteWithChildren
+  '/faq': typeof FaqRoute
   '/journal': typeof JournalRoute
   '/lab': typeof LabRoute
   '/method': typeof MethodRoute
+  '/pass': typeof PassRoute
   '/course/$id': typeof CourseIdRoute
 }
 export interface FileRouteTypes {
@@ -87,27 +105,33 @@ export interface FileRouteTypes {
     | '/'
     | '/archive'
     | '/course'
+    | '/faq'
     | '/journal'
     | '/lab'
     | '/method'
+    | '/pass'
     | '/course/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/archive'
     | '/course'
+    | '/faq'
     | '/journal'
     | '/lab'
     | '/method'
+    | '/pass'
     | '/course/$id'
   id:
     | '__root__'
     | '/'
     | '/archive'
     | '/course'
+    | '/faq'
     | '/journal'
     | '/lab'
     | '/method'
+    | '/pass'
     | '/course/$id'
   fileRoutesById: FileRoutesById
 }
@@ -115,9 +139,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArchiveRoute: typeof ArchiveRoute
   CourseRoute: typeof CourseRouteWithChildren
+  FaqRoute: typeof FaqRoute
   JournalRoute: typeof JournalRoute
   LabRoute: typeof LabRoute
   MethodRoute: typeof MethodRoute
+  PassRoute: typeof PassRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -143,6 +169,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CourseRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/journal': {
       id: '/journal'
       path: '/journal'
@@ -162,6 +195,13 @@ declare module '@tanstack/react-router' {
       path: '/method'
       fullPath: '/method'
       preLoaderRoute: typeof MethodRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pass': {
+      id: '/pass'
+      path: '/pass'
+      fullPath: '/pass'
+      preLoaderRoute: typeof PassRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/course/$id': {
@@ -189,9 +229,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArchiveRoute: ArchiveRoute,
   CourseRoute: CourseRouteWithChildren,
+  FaqRoute: FaqRoute,
   JournalRoute: JournalRoute,
   LabRoute: LabRoute,
   MethodRoute: MethodRoute,
+  PassRoute: PassRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

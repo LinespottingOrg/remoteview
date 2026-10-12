@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { glossary, people, saicRows, sources, studies, timeline } from "@/data/archive";
 import { Shell, Kicker } from "@/components/shell";
 
@@ -149,6 +149,13 @@ function ArchivePage() {
             </li>
           ))}
         </ul>
+        <p className="mt-6 max-w-2xl text-sm leading-relaxed text-muted">
+          The method was claimed as proprietary to Swann. It was not granted as a patent. Puthoff’s patents are
+          about communications, not viewing.{" "}
+          <Link to="/faq" hash="patent" className="text-copper">
+            The FAQ keeps the numbers.
+          </Link>
+        </p>
       </section>
     </Shell>
   );

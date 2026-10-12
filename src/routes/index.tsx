@@ -1,12 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { lessons } from "@/data/course";
+import { Exclusions } from "@/components/exclusions";
 import { Shell, Kicker } from "@/components/shell";
+import { usePassHydrated, usePassStatus } from "@/lib/pass";
 import { useHydrated, useProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
   const hydrated = useHydrated();
+  const passReady = usePassHydrated();
+  const status = usePassStatus();
   const done = useProgress((s) => s.done);
   const sessions = useProgress((s) => s.sessions);
   const next = lessons.find((lesson) => !done.includes(lesson.id)) ?? lessons[0]!;
@@ -106,10 +110,22 @@ function Home() {
         </Link>
       </section>
 
-      <p className="mt-12 max-w-2xl text-sm leading-relaxed text-faint">
-        An educational reconstruction of a published method and the public research record. Not medicine, not legal
-        evidence, not an invitation to view people. Your authority is the page, the blind, and the score.
+      <p className="mt-10 max-w-2xl text-sm leading-relaxed text-muted">
+        {passReady && status.phase === "trial"
+          ? `${status.daysLeft} ${status.daysLeft === 1 ? "day" : "days"} left in the free week. Then 4 USD a month, 35 a year, or 99 lifetime.`
+          : passReady && status.open
+            ? "The pass on this device is open."
+            : "One free week, then 4 USD a month, 35 USD a year, or 99 USD lifetime."}{" "}
+        <Link to="/pass" className="text-copper">
+          The pass
+        </Link>
+        {" · "}
+        <Link to="/faq" className="text-copper">
+          Sources and patents
+        </Link>
       </p>
+
+      <Exclusions />
     </Shell>
   );
 }

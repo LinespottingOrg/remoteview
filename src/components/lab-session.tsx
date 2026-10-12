@@ -5,6 +5,7 @@ import { pickTarget, targets, type Target } from "@/data/targets";
 import { savePads } from "@/lib/pads";
 import { useProgress, type SessionScore } from "@/lib/progress";
 import { Pad } from "@/components/pad";
+import { Exclusions } from "@/components/exclusions";
 
 type Phase = "ready" | "work" | "sealed" | "open" | "locked";
 
@@ -93,8 +94,8 @@ export function LabSession() {
             <li className="border-l border-line pl-3">4. Seal. Then look. Then score the miss as carefully as the hit.</li>
           </ol>
           <p className="text-sm leading-relaxed text-faint">
-            Do not view people. Places and objects in this pool only. {targets.length} targets, chosen so recent
-            ones wait their turn.
+            Places and objects in this pool only — {targets.length} targets, chosen so recent ones wait their turn.
+            People, medicine, legal claims, money, and borrowed stamps are excluded. The reasons are under the page.
           </p>
           <button
             type="button"
@@ -247,6 +248,8 @@ export function LabSession() {
           ) : null}
         </div>
       ) : null}
+
+      <Exclusions />
     </div>
   );
 }

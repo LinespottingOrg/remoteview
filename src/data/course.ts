@@ -427,11 +427,13 @@ Score three things. Did the gestalt match. Did at least two sensory lines match.
 
 Do this twenty times before you decide what you believe. The government program itself is a warning against deciding early. Utts looked at a very large body of trials and called the effect small to medium, and replicable in the long run. Hyman looked at the same class of result and said the anomaly was real as a statistic and unidentified as a cause. The American Institutes for Research looked at operations and said it had not been useful. Your twenty sessions will not outvote them. They will teach you the difference between a felt conviction and a scored page.
 
-Ethics, briefly, because the method is easy to misuse.
+Ethics, because the method is easy to point at a life. The same five lines are written out on the front page.
 
-Do not view people. Not a partner, not a stranger, not an illness, not a missing person. This course refuses that use. The consent problem is obvious. The false-positive problem is worse. And nothing in the declassified record makes you qualified to intervene in someone's life.
+Do not view people. Not a partner, not a stranger, not an illness, not a missing person. They did not agree to be a target. A wrong description can still be believed, and a believed false positive is worse than a blank page. Nothing in the declassified record makes you qualified to intervene in someone’s life. The practice pool is places and objects only.
 
-Do not offer remote viewing as medicine, as legal evidence, or as a reason to spend money.
+Do not offer remote viewing as medicine. A sensation is not a diagnosis, and a sketch is not a treatment. The nineteen ninety-five evaluation never treated this as a clinical instrument. A false alarm and a missed illness are both harm.
+
+Do not offer a session as legal evidence, or as a reason to spend money. The operational reports the American Institutes for Research reviewed were broad, inconsistent, and unused to guide intelligence operations. A training page cannot accuse, locate, or exonerate. Associative remote viewing, the variant that ties a future outcome to a picture, is not taught here as a decision tool. Wanting a result is the most reliable source of overlay.
 
 Do not dress the practice in borrowed authority. You are not in a classified program. The stamps on the old documents belong to history. Your authority is the page, the blind, and the score.
 

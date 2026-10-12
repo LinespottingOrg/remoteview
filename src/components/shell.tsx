@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { BookOpen, FlaskConical, Library, PenLine } from "lucide-react";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+import { usePass, usePassHydrated, usePassStatus } from "@/lib/pass";
 
 const NAV = [
   { to: "/course", label: "Course", icon: BookOpen },
@@ -15,6 +16,12 @@ function active(path: string, to: string) {
 
 export function Shell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const ensureStarted = usePass((s) => s.ensureStarted);
+  useEffect(() => {
+    const start = () => usePass.getState().ensureStarted();
+    if (usePass.persist.hasHydrated()) start();
+    return usePass.persist.onFinishHydration(start);
+  }, [ensureStarted]);
 
   return (
     <div className="min-h-screen">
@@ -39,6 +46,12 @@ export function Shell({ children }: { children: ReactNode }) {
             </Link>
           ))}
           <Link
+            to="/faq"
+            className={"px-3 py-2 text-sm " + (active(path, "/faq") ? "text-copper" : "text-muted hover:text-fg")}
+          >
+            FAQ
+          </Link>
+          <Link
             to="/journal"
             className={
               "px-3 py-2 text-sm " + (active(path, "/journal") ? "text-copper" : "text-muted hover:text-fg")
@@ -46,15 +59,14 @@ export function Shell({ children }: { children: ReactNode }) {
           >
             Journal
           </Link>
+          <PassLink />
         </nav>
-        <Link
-          to="/journal"
-          className={
-            "text-sm md:hidden " + (active(path, "/journal") ? "text-copper" : "text-muted")
-          }
-        >
-          Journal
-        </Link>
+        <div className="flex items-center gap-4 md:hidden">
+          <PassLink />
+          <Link to="/journal" className={"text-sm " + (active(path, "/journal") ? "text-copper" : "text-muted")}>
+            Journal
+          </Link>
+        </div>
       </header>
       <main className="mx-auto w-full max-w-6xl px-4 pt-6 pb-28 md:px-8 md:pt-10 md:pb-16">{children}</main>
       <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-line bg-bg md:hidden">
@@ -77,6 +89,27 @@ export function Shell({ children }: { children: ReactNode }) {
         })}
       </nav>
     </div>
+  );
+}
+
+function PassLink() {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const hydrated = usePassHydrated();
+  const status = usePassStatus();
+  const on = active(path, "/pass");
+  const label = !hydrated
+    ? "Pass"
+    : status.phase === "life"
+      ? "Lifetime"
+      : status.phase === "paid"
+        ? "Pass"
+        : status.phase === "trial"
+          ? `${status.daysLeft}d free`
+          : "Pass";
+  return (
+    <Link to="/pass" className={"px-3 py-2 text-sm " + (on ? "text-copper" : "text-muted hover:text-fg")}>
+      {label}
+    </Link>
   );
 }
 
