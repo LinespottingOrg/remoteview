@@ -3,22 +3,21 @@ import { useState } from "react";
 import { faq, patentLinks } from "@/data/faq";
 import { sources } from "@/data/archive";
 import { Shell, Kicker } from "@/components/shell";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/faq")({ component: FaqPage });
 
 function FaqPage() {
+  const { t } = useI18n();
   const [open, setOpen] = useState("patent");
 
   return (
     <Shell>
-      <Kicker>FAQ</Kicker>
+      <Kicker>{t("faq.kicker")}</Kicker>
       <h1 className="mt-3 max-w-3xl font-serif text-4xl leading-tight font-medium text-fg md:text-5xl">
-        Sources, patents, and the pass.
+        {t("faq.title")}
       </h1>
-      <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
-        The academy is built. The method was claimed as proprietary. It was not granted as a patent. The papers
-        are listed twice: here, short, and on the record, with the limits.
-      </p>
+      <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">{t("faq.lede")}</p>
 
       <div className="mt-10 max-w-3xl divide-y divide-line border-y border-line">
         {faq.map((item) => {
@@ -31,7 +30,7 @@ function FaqPage() {
                 className="flex min-h-14 w-full items-baseline justify-between gap-4 py-4 text-left"
               >
                 <span className="font-serif text-xl text-fg">{item.q}</span>
-                <span className="text-xs uppercase tracking-widest text-copper">{on ? "Close" : "Open"}</span>
+                <span className="text-xs uppercase tracking-widest text-copper">{on ? t("faq.close") : t("faq.open")}</span>
               </button>
               {on ? (
                 <div className="space-y-3 pb-5">
@@ -48,7 +47,7 @@ function FaqPage() {
       </div>
 
       <section className="mt-14 max-w-3xl" id="patents">
-        <h2 className="font-serif text-2xl text-fg">Patents and the archive</h2>
+        <h2 className="font-serif text-2xl text-fg">{t("faq.patentsTitle")}</h2>
         <ul className="mt-4 divide-y divide-line border-y border-line">
           {patentLinks.map((item) => (
             <li key={item.id} className="py-4">
@@ -62,7 +61,7 @@ function FaqPage() {
       </section>
 
       <section className="mt-14 max-w-3xl">
-        <h2 className="font-serif text-2xl text-fg">The same shelf as the record</h2>
+        <h2 className="font-serif text-2xl text-fg">{t("faq.shelfTitle")}</h2>
         <ul className="mt-4 space-y-4">
           {sources.map((source) => (
             <li key={source.title} className="border-t border-line pt-4">

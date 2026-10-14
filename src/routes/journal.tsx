@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import { targets } from "@/data/targets";
 import { Shell, Kicker } from "@/components/shell";
 import { deletePads, loadPads, type Pads } from "@/lib/pads";
+import { useI18n } from "@/lib/i18n";
 import { useHydrated, useProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/journal")({ component: JournalPage });
 
 function JournalPage() {
+  const { t } = useI18n();
   const hydrated = useHydrated();
   const sessions = useProgress((s) => s.sessions);
   const removeSession = useProgress((s) => s.removeSession);
@@ -44,18 +46,18 @@ function JournalPage() {
 
   return (
     <Shell>
-      <Kicker>Journal</Kicker>
-      <h1 className="mt-3 font-serif text-4xl leading-tight font-medium text-fg">A record that can disappoint you</h1>
+      <Kicker>{t("journal.kicker")}</Kicker>
+      <h1 className="mt-3 font-serif text-4xl leading-tight font-medium text-fg">{t("journal.title")}</h1>
       <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
-        Scores stay on this device. After twenty sessions you have a rate. Before that, you have a mood.
-        {hydrated && scored > 0 ? ` So far, ${marks} of ${scored * 3} possible marks.` : ""}
+        {t("journal.lede")}
+        {hydrated && scored > 0 ? t("journal.soFar", { marks, possible: scored * 3 }) : ""}
       </p>
 
       {!hydrated || sessions.length === 0 ? (
         <div className="mt-8 border-t border-line pt-6">
-          <p className="text-sm text-muted">No locked sessions yet.</p>
+          <p className="text-sm text-muted">{t("journal.empty")}</p>
           <Link to="/lab" className="mt-4 inline-flex min-h-12 items-center text-sm text-copper">
-            Open the lab
+            {t("journal.openLab")}
           </Link>
         </div>
       ) : (
@@ -79,30 +81,30 @@ function JournalPage() {
                   </p>
                 </div>
                 <p className="mt-1 text-sm text-copper">
-                  {hits} of 3 · {target?.title ?? "Target"}
+                  {t("journal.hits", { hits, title: target?.title ?? t("journal.targetFallback") })}
                 </p>
                 <dl className="mt-3 space-y-1 text-sm text-muted">
                   {session.feeling ? (
                     <div>
-                      <dt className="inline text-faint">A </dt>
+                      <dt className="inline text-faint">{t("journal.feeling")}</dt>
                       <dd className="inline">{session.feeling}</dd>
                     </div>
                   ) : null}
                   {session.gestalt ? (
                     <div>
-                      <dt className="inline text-faint">B </dt>
+                      <dt className="inline text-faint">{t("journal.gestalt")}</dt>
                       <dd className="inline">{session.gestalt}</dd>
                     </div>
                   ) : null}
                   {session.sensory ? (
                     <div>
-                      <dt className="inline text-faint">Senses </dt>
+                      <dt className="inline text-faint">{t("journal.senses")}</dt>
                       <dd className="inline">{session.sensory}</dd>
                     </div>
                   ) : null}
                   {session.aol ? (
                     <div>
-                      <dt className="inline text-faint">AOL </dt>
+                      <dt className="inline text-faint">{t("journal.aol")}</dt>
                       <dd className="inline">{session.aol}</dd>
                     </div>
                   ) : null}
@@ -110,15 +112,15 @@ function JournalPage() {
                 {drawing?.ideogram || drawing?.sketch ? (
                   <div className="mt-3 grid grid-cols-2 gap-3">
                     {drawing.ideogram ? (
-                      <img src={drawing.ideogram} alt="Ideogram from this session" className="w-full rounded-sm" />
+                      <img src={drawing.ideogram} alt={t("journal.ideogramAlt")} className="w-full rounded-sm" />
                     ) : null}
                     {drawing.sketch ? (
-                      <img src={drawing.sketch} alt="Sketch from this session" className="w-full rounded-sm" />
+                      <img src={drawing.sketch} alt={t("journal.sketchAlt")} className="w-full rounded-sm" />
                     ) : null}
                   </div>
                 ) : null}
                 <button type="button" onClick={() => void remove(session.id)} className="mt-3 min-h-11 text-sm text-faint">
-                  Remove this session
+                  {t("journal.remove")}
                 </button>
               </li>
             );

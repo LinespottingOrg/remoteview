@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { lessons, type Lesson } from "@/data/course";
+import { useI18n } from "@/lib/i18n";
 import { useHydrated, useProgress } from "@/lib/progress";
 import { Kicker } from "@/components/shell";
 
 export function LessonView({ lesson }: { lesson: Lesson }) {
+  const { t } = useI18n();
   const hydrated = useHydrated();
   const saved = useProgress((s) => s.quizzes[lesson.id]);
   const done = useProgress((s) => s.done.includes(lesson.id));
@@ -38,10 +40,10 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
   return (
     <article className="mx-auto max-w-3xl">
       <Link to="/course" className="text-sm text-muted">
-        All lessons
+        {t("lesson.allLessons")}
       </Link>
       <header className="mt-4 border-l-2 border-copper pl-4">
-        <Kicker index={lesson.numeral}>Lecture · {lesson.minutes}</Kicker>
+        <Kicker index={lesson.numeral}>{t("lesson.kicker", { minutes: lesson.minutes })}</Kicker>
         <h1 className="mt-2 font-serif text-4xl leading-tight font-medium text-fg md:text-5xl">{lesson.title}</h1>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">{lesson.summary}</p>
       </header>
@@ -59,15 +61,15 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
             onError={() => setFilmOk(false)}
           />
           <figcaption className="mt-2 text-sm text-faint">
-            A ten-second film for this lesson. It starts muted so it does not fight the lecture.
+            {t("lesson.filmCaption")}
           </figcaption>
         </figure>
       ) : null}
 
       <section className="sheet mt-8 rounded-lg bg-paper p-5 text-ink md:p-8">
-        <p className="text-xs font-medium uppercase tracking-widest text-ink-soft">Lecture</p>
+        <p className="text-xs font-medium uppercase tracking-widest text-ink-soft">{t("lesson.lecture")}</p>
         <audio className="mt-3 w-full" controls preload="metadata" src={lesson.audio}>
-          <a href={lesson.audio}>Listen to the lecture</a>
+          <a href={lesson.audio}>{t("lesson.listen")}</a>
         </audio>
         <div className="mt-6 space-y-4">
           {paragraphs.map((paragraph) => {
@@ -83,7 +85,7 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
               >
                 {speaker ? (
                   <span className="mr-2 font-sans text-xs font-medium uppercase tracking-widest text-copper-dim">
-                    {record ? "Record" : "Guide"}
+                    {record ? t("lesson.record") : t("lesson.guide")}
                   </span>
                 ) : null}
                 {speaker ? paragraph.slice(paragraph.indexOf(".") + 1).trim() : paragraph}
@@ -94,7 +96,7 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
       </section>
 
       <section className="mt-8">
-        <h2 className="font-serif text-2xl text-fg">Keep these</h2>
+        <h2 className="font-serif text-2xl text-fg">{t("lesson.keepThese")}</h2>
         <ul className="mt-3 space-y-2">
           {lesson.points.map((point) => (
             <li key={point} className="border-l border-line pl-3 text-sm leading-relaxed text-muted">
@@ -105,8 +107,8 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
       </section>
 
       <section className="mt-10">
-        <h2 className="font-serif text-2xl text-fg">Check yourself</h2>
-        <p className="mt-2 text-sm text-muted">Two questions. Wrong answers stay visible, with the reason.</p>
+        <h2 className="font-serif text-2xl text-fg">{t("lesson.checkYourself")}</h2>
+        <p className="mt-2 text-sm text-muted">{t("lesson.checkNote")}</p>
         <ol className="mt-5 space-y-6">
           {lesson.quiz.map((q, qi) => {
             const pick = picks[qi];
@@ -152,15 +154,15 @@ export function LessonView({ lesson }: { lesson: Lesson }) {
             onClick={commit}
             className="inline-flex min-h-12 items-center bg-copper px-5 text-sm font-medium text-ink disabled:opacity-40"
           >
-            {hydrated && done ? "Saved" : "Mark listened"}
+            {hydrated && done ? t("lesson.saved") : t("lesson.markListened")}
           </button>
           {next ? (
             <Link to="/course/$id" params={{ id: next.id }} className="inline-flex min-h-12 items-center text-sm text-copper">
-              Next · {next.title}
+              {t("lesson.next", { title: next.title })}
             </Link>
           ) : (
             <Link to="/lab" className="inline-flex min-h-12 items-center text-sm text-copper">
-              Open the practice lab
+              {t("lesson.openLab")}
             </Link>
           )}
         </div>

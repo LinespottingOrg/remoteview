@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useI18n } from "@/lib/i18n";
 
 type Props = {
   label: string;
@@ -6,6 +7,7 @@ type Props = {
 };
 
 export function Pad({ label, onChange }: Props) {
+  const { t } = useI18n();
   const ref = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
 
@@ -87,7 +89,7 @@ export function Pad({ label, onChange }: Props) {
       <div className="mb-2 flex items-center justify-between">
         <p className="text-xs font-medium uppercase tracking-widest text-ink-soft">{label}</p>
         <button type="button" onClick={clear} className="min-h-11 px-2 text-sm text-copper-dim">
-          Clear
+          {t("lab.clear")}
         </button>
       </div>
       <canvas

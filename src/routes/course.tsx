@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { lessons } from "@/data/course";
 import { Shell, Kicker } from "@/components/shell";
+import { useI18n } from "@/lib/i18n";
 import { usePassHydrated, usePassStatus } from "@/lib/pass";
 import { useHydrated, useProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/course")({ component: Course });
 
 function Course() {
+  const { t } = useI18n();
   const hydrated = useHydrated();
   const passReady = usePassHydrated();
   const status = usePassStatus();
@@ -14,14 +16,11 @@ function Course() {
 
   return (
     <Shell>
-      <Kicker>Lectures</Kicker>
+      <Kicker>{t("course.kicker")}</Kicker>
       <h1 className="mt-3 max-w-2xl font-serif text-4xl leading-tight font-medium text-fg md:text-5xl">
-        Sound first. A short film beside each one.
+        {t("course.title")}
       </h1>
-      <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
-        About twenty minutes, spoken. The films are ten seconds and start muted. Read along on the page, then
-        answer two questions. Marking a lecture only means you heard it — the questions show their reasons either way.
-      </p>
+      <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">{t("course.lede")}</p>
       <ol className="mt-8 divide-y divide-line border-y border-line">
         {lessons.map((lesson) => {
           const complete = hydrated && done.includes(lesson.id);
@@ -34,8 +33,8 @@ function Course() {
                   <span className="block text-lg text-fg">{lesson.title}</span>
                   <span className="mt-1 block text-sm text-faint">
                     {lesson.minutes}
-                    {complete ? " · listened" : " · lecture and film"}
-                    {gated ? " · in the pass" : ""}
+                    {complete ? t("course.listened") : t("course.lectureAndFilm")}
+                    {gated ? t("course.inThePass") : ""}
                   </span>
                 </span>
                 <span className="text-sm leading-relaxed text-muted md:col-span-7">{lesson.summary}</span>
