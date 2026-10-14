@@ -6,6 +6,7 @@ import { savePads } from "@/lib/pads";
 import { useProgress, type SessionScore } from "@/lib/progress";
 import { Pad } from "@/components/pad";
 import { Exclusions } from "@/components/exclusions";
+import { useI18n } from "@/lib/i18n";
 
 type Phase = "ready" | "work" | "sealed" | "open" | "locked";
 
@@ -17,6 +18,7 @@ function makeCue() {
 }
 
 export function LabSession() {
+  const { t } = useI18n();
   const sessions = useProgress((s) => s.sessions);
   const addSession = useProgress((s) => s.addSession);
   const recent = useMemo(() => sessions.slice(0, 4).map((s) => s.targetId), [sessions]);
@@ -67,42 +69,40 @@ export function LabSession() {
     try {
       if (ideogram || sketch) await savePads(id, { ideogram, sketch });
     } catch {
-      setError("The score is saved. The drawings could not be stored on this device.");
+      setError(t("lab.drawError"));
     }
     setPhase("locked");
   }
 
   const hits = Number(score.gestalt) + Number(score.sensory) + Number(score.relation);
+  const lockedLine =
+    hits === 0 ? t("lab.lockedZero", { hits }) : hits === 3 ? t("lab.lockedStrong", { hits }) : t("lab.lockedMixed", { hits });
 
   return (
     <div className="mx-auto max-w-3xl">
       <header className="border-l-2 border-copper pl-4">
-        <p className="text-xs font-medium uppercase tracking-widest text-copper">Practice lab</p>
-        <h1 className="mt-2 font-serif text-4xl leading-tight font-medium text-fg">A blind page</h1>
-        <p className="mt-4 text-base leading-relaxed text-muted">
-          Ten minutes. Ideogram, four senses, one sketch. The picture stays off this page until you seal it.
-          The seal is a discipline, not a lock.
-        </p>
+        <p className="text-xs font-medium uppercase tracking-widest text-copper">{t("lab.kicker")}</p>
+        <h1 className="mt-2 font-serif text-4xl leading-tight font-medium text-fg">{t("lab.title")}</h1>
+        <p className="mt-4 text-base leading-relaxed text-muted">{t("lab.lede")}</p>
       </header>
 
       {phase === "ready" ? (
         <div className="mt-8 space-y-6">
           <ol className="space-y-3 text-sm leading-relaxed text-muted">
-            <li className="border-l border-line pl-3">1. Take the cue. Do not try to decode it. It does not describe the target.</li>
-            <li className="border-l border-line pl-3">2. One mark. Write A, the feeling. Write B from the small vocabulary, or box an AOL.</li>
-            <li className="border-l border-line pl-3">3. Temperature, texture, sound, light. Then masses and how they sit.</li>
-            <li className="border-l border-line pl-3">4. Seal. Then look. Then score the miss as carefully as the hit.</li>
+            <li className="border-l border-line pl-3">{t("lab.step1")}</li>
+            <li className="border-l border-line pl-3">{t("lab.step2")}</li>
+            <li className="border-l border-line pl-3">{t("lab.step3")}</li>
+            <li className="border-l border-line pl-3">{t("lab.step4")}</li>
           </ol>
           <p className="text-sm leading-relaxed text-faint">
-            Places and objects in this pool only — {targets.length} targets, chosen so recent ones wait their turn.
-            People, medicine, legal claims, money, and borrowed stamps are excluded. The reasons are under the page.
+            {t("lab.pool", { count: targets.length })}
           </p>
           <button
             type="button"
             onClick={begin}
             className="inline-flex min-h-12 items-center bg-copper px-5 text-sm font-medium text-ink"
           >
-            Begin a blind session
+            {t("lab.begin")}
           </button>
         </div>
       ) : null}
@@ -110,27 +110,27 @@ export function LabSession() {
       {phase !== "ready" && target ? (
         <div className="sheet mt-8 rounded-lg bg-paper p-5 text-ink md:p-8">
           <div className="flex items-baseline justify-between gap-3">
-            <p className="text-xs font-medium uppercase tracking-widest text-ink-soft">Session</p>
+            <p className="text-xs font-medium uppercase tracking-widest text-ink-soft">{t("lab.session")}</p>
             <p className="font-serif text-2xl text-ink">{cue}</p>
           </div>
-          <p className="mt-1 text-sm text-ink-soft">Cue only. It is not a coordinate and it is not a hint.</p>
+          <p className="mt-1 text-sm text-ink-soft">{t("lab.cueNote")}</p>
 
           <div className="mt-6">
-            <Pad key={`${cue}-ideogram`} label="Stage I · ideogram" onChange={setIdeogram} />
+            <Pad key={`${cue}-ideogram`} label={t("lab.stage1")} onChange={setIdeogram} />
           </div>
 
           <label className="mt-5 block">
-            <span className="text-xs font-medium uppercase tracking-widest text-ink-soft">A · feeling of the mark</span>
+            <span className="text-xs font-medium uppercase tracking-widest text-ink-soft">{t("lab.feeling")}</span>
             <input
               value={feeling}
               onChange={(e) => setFeeling(e.target.value)}
-              placeholder="Wavy, hard, rising, flat…"
+              placeholder={t("lab.feelingPlaceholder")}
               disabled={phase !== "work"}
             />
           </label>
           <label className="mt-4 block">
             <span className="text-xs font-medium uppercase tracking-widest text-ink-soft">
-              B · gestalt, or AOL
+              {t("lab.gestalt")}
             </span>
             <input
               value={gestalt}
@@ -141,24 +141,24 @@ export function LabSession() {
           </label>
           <label className="mt-4 block">
             <span className="text-xs font-medium uppercase tracking-widest text-ink-soft">
-              Stage II · temperature, texture, sound, light
+              {t("lab.stage2")}
             </span>
             <textarea
               value={sensory}
               onChange={(e) => setSensory(e.target.value)}
-              placeholder="Adjectives. No place names."
+              placeholder={t("lab.sensoryPlaceholder")}
               disabled={phase !== "work"}
             />
           </label>
           <div className="mt-5">
-            <Pad key={`${cue}-sketch`} label="Stage III · masses and how they sit" onChange={setSketch} />
+            <Pad key={`${cue}-sketch`} label={t("lab.stage3")} onChange={setSketch} />
           </div>
           <label className="mt-5 block">
-            <span className="text-xs font-medium uppercase tracking-widest text-ink-soft">AOL · boxed, not obeyed</span>
+            <span className="text-xs font-medium uppercase tracking-widest text-ink-soft">{t("lab.aol")}</span>
             <input
               value={aol}
               onChange={(e) => setAol(e.target.value)}
-              placeholder="If a name arrived, write it here and leave it"
+              placeholder={t("lab.aolPlaceholder")}
               disabled={phase !== "work"}
             />
           </label>
@@ -169,22 +169,21 @@ export function LabSession() {
               onClick={() => setPhase("sealed")}
               className="mt-6 inline-flex min-h-12 items-center bg-ink px-5 text-sm font-medium text-paper"
             >
-              Seal the page
+              {t("lab.seal")}
             </button>
           ) : null}
 
           {phase === "sealed" ? (
             <div className="mt-6 border-t border-rule pt-5">
               <p className="text-sm leading-relaxed text-ink-soft">
-                The page is closed. Opening the target is feedback. If you already knew which picture this was, mark
-                the session contaminated and do not count it.
+                {t("lab.sealedNote")}
               </p>
               <button
                 type="button"
                 onClick={() => setPhase("open")}
                 className="mt-4 inline-flex min-h-12 items-center bg-copper px-5 text-sm font-medium text-ink"
               >
-                Open the target
+                {t("lab.openTarget")}
               </button>
             </div>
           ) : null}
@@ -194,24 +193,24 @@ export function LabSession() {
               <img src={target.image} alt={target.title} className="aspect-photo w-full rounded-sm object-cover" />
               <h2 className="mt-4 font-serif text-2xl">{target.title}</h2>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-                Score only what you wrote before this picture. Adjacency is not a hit.
+                {t("lab.scoreNote")}
               </p>
               <ScoreRow
-                label="Gestalt matches what you wrote"
+                label={t("lab.scoreGestalt")}
                 detail={target.gestalt}
                 on={score.gestalt}
                 disabled={phase === "locked"}
                 onToggle={() => setScore((s) => ({ ...s, gestalt: !s.gestalt }))}
               />
               <ScoreRow
-                label="At least two sensory lines match"
+                label={t("lab.scoreSensory")}
                 detail={target.sensory}
                 on={score.sensory}
                 disabled={phase === "locked"}
                 onToggle={() => setScore((s) => ({ ...s, sensory: !s.sensory }))}
               />
               <ScoreRow
-                label="The sketch has the relationship"
+                label={t("lab.scoreRelation")}
                 detail={target.relation}
                 on={score.relation}
                 disabled={phase === "locked"}
@@ -223,23 +222,23 @@ export function LabSession() {
                   onClick={() => void lock()}
                   className="mt-5 inline-flex min-h-12 items-center bg-ink px-5 text-sm font-medium text-paper"
                 >
-                  Lock the score · {hits} of 3
+                  {t("lab.lock", { hits })}
                 </button>
               ) : (
                 <div className="mt-5">
                   <p className="text-sm font-medium text-ink">
-                    Locked at {hits} of 3. {hits === 0 ? "A zero is data." : hits === 3 ? "A strong training page." : "Mixed. Keep it mixed."}
+                    {lockedLine}
                   </p>
                   <p className="mt-3 text-sm leading-relaxed text-ink-soft">
-                    A clean stage I–III line for this target, written after the fact so it cannot help you: {target.model}
+                    {t("lab.modelNote", { model: target.model })}
                   </p>
                   {error ? <p className="mt-2 text-sm text-rose">{error}</p> : null}
                   <div className="mt-4 flex flex-wrap gap-4">
                     <button type="button" onClick={begin} className="min-h-12 text-sm font-medium text-copper-dim">
-                      Another session
+                      {t("lab.another")}
                     </button>
                     <Link to="/journal" className="inline-flex min-h-12 items-center text-sm text-ink">
-                      Open the journal
+                      {t("lab.openJournal")}
                     </Link>
                   </div>
                 </div>
@@ -267,6 +266,7 @@ function ScoreRow({
   disabled: boolean;
   onToggle: () => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="mt-4 border-t border-rule pt-3">
       <button
@@ -282,7 +282,7 @@ function ScoreRow({
             (on ? "bg-sage text-ink" : "bg-rule text-ink-soft")
           }
         >
-          {on ? "Yes" : "No"}
+          {on ? t("lab.yes") : t("lab.no")}
         </span>
       </button>
       <p className="text-sm leading-relaxed text-ink-soft">{detail}</p>

@@ -2,12 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { lessons } from "@/data/course";
 import { Exclusions } from "@/components/exclusions";
 import { Shell, Kicker } from "@/components/shell";
+import { useI18n } from "@/lib/i18n";
 import { usePassHydrated, usePassStatus } from "@/lib/pass";
 import { useHydrated, useProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
+  const { t } = useI18n();
   const hydrated = useHydrated();
   const passReady = usePassHydrated();
   const status = usePassStatus();
@@ -22,49 +24,54 @@ function Home() {
         <figure className="md:col-span-5">
           <img
             src="/media/hero.jpg"
-            alt="A cream sheet on a dark desk, one ink ideogram, a copper pen, and a sealed envelope."
+            alt={t("home.heroAlt")}
             className="aspect-video w-full rounded-md object-cover"
           />
-          <figcaption className="mt-2 text-sm text-faint">The page before the name.</figcaption>
+          <figcaption className="mt-2 text-sm text-faint">{t("home.heroCaption")}</figcaption>
         </figure>
         <div className="md:col-span-7">
-          <Kicker index="Academy">Remote viewing, taught against its own record</Kicker>
+          <Kicker index={t("home.kickerIndex")}>{t("home.kicker")}</Kicker>
           <h1 className="mt-3 font-serif text-4xl leading-tight font-medium text-balance text-fg md:text-6xl">
-            Learn the method. Read both verdicts.
+            {t("home.title")}
           </h1>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted">
-            Eight spoken lectures and a short film with each one. The six stages from the declassified training
-            notes. A blind practice lab that scores a miss as carefully as a hit. Built from the SRI work, the Fort
-            Meade program, and the 1995 evaluation — including the parts that say it was not useful.
-          </p>
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-muted">{t("home.lede")}</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               to="/course/$id"
               params={{ id: next.id }}
               className="inline-flex min-h-12 items-center bg-copper px-5 text-sm font-medium text-ink"
             >
-              {heard === 0 ? "Start the first lecture" : heard === lessons.length ? "Replay the course" : `Continue · ${next.numeral}`}
+              {heard === 0
+                ? t("home.start")
+                : heard === lessons.length
+                  ? t("home.replay")
+                  : t("home.continue", { numeral: next.numeral })}
             </Link>
             <Link
               to="/lab"
               className="inline-flex min-h-12 items-center border border-line px-5 text-sm text-fg"
             >
-              Practice blind
+              {t("home.practice")}
             </Link>
           </div>
           <p className="mt-4 text-sm text-faint">
-            {hydrated ? `${heard} of ${lessons.length} lectures marked` : `${lessons.length} lectures`}
-            {hydrated && sessions.length > 0 ? ` · ${sessions.length} scored sessions` : ""}
-            {" · "}about 20 minutes of audio
+            {hydrated
+              ? t("home.lecturesMarked", { heard, total: lessons.length })
+              : t("home.lectureCount", { total: lessons.length })}
+            {hydrated && sessions.length > 0
+              ? ` · ${t("home.scoredSessions", { count: sessions.length })}`
+              : ""}
+            {" · "}
+            {t("home.audioLength")}
           </p>
         </div>
       </div>
 
       <section className="mt-12">
         <div className="flex items-end justify-between gap-4">
-          <h2 className="font-serif text-2xl text-fg">The course</h2>
+          <h2 className="font-serif text-2xl text-fg">{t("home.courseHeading")}</h2>
           <Link to="/course" className="text-sm text-copper">
-            All lectures
+            {t("home.allLectures")}
           </Link>
         </div>
         <ol className="mt-4 divide-y divide-line border-y border-line">
@@ -82,7 +89,7 @@ function Home() {
                     <span className="block text-base text-fg">{lesson.title}</span>
                     <span className="mt-1 block text-sm text-faint">
                       {lesson.minutes}
-                      {complete ? " · listened" : ""}
+                      {complete ? t("home.listenedSuffix") : ""}
                     </span>
                   </span>
                 </Link>
@@ -94,34 +101,29 @@ function Home() {
 
       <section className="mt-12 grid gap-8 md:grid-cols-2">
         <Link to="/archive" className="block border-t border-line pt-4">
-          <p className="text-xs font-medium uppercase tracking-widest text-copper">The record</p>
-          <h3 className="mt-2 font-serif text-2xl text-fg">Hold both pages at once</h3>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            Utts: established, small to medium. Hyman: a real anomaly, an unnamed cause. AIR: not useful for
-            intelligence. Timeline, the SAIC table, people, glossary, sources.
-          </p>
+          <p className="text-xs font-medium uppercase tracking-widest text-copper">{t("home.recordKicker")}</p>
+          <h3 className="mt-2 font-serif text-2xl text-fg">{t("home.recordTitle")}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{t("home.recordBody")}</p>
         </Link>
         <Link to="/method" className="block border-t border-line pt-4">
-          <p className="text-xs font-medium uppercase tracking-widest text-copper">The method</p>
-          <h3 className="mt-2 font-serif text-2xl text-fg">Six stages, and a drill for overlay</h3>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            Ideogram through model. Then seven lines to sort: write it as data, box it as AOL, or stop the session.
-          </p>
+          <p className="text-xs font-medium uppercase tracking-widest text-copper">{t("home.methodKicker")}</p>
+          <h3 className="mt-2 font-serif text-2xl text-fg">{t("home.methodTitle")}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{t("home.methodBody")}</p>
         </Link>
       </section>
 
       <p className="mt-10 max-w-2xl text-sm leading-relaxed text-muted">
         {passReady && status.phase === "trial"
-          ? `${status.daysLeft} ${status.daysLeft === 1 ? "day" : "days"} left in the free week. Then 4 USD a month, 35 a year, or 99 lifetime.`
+          ? t(status.daysLeft === 1 ? "home.trialOne" : "home.trialOther", { count: status.daysLeft })
           : passReady && status.open
-            ? "The pass on this device is open."
-            : "One free week, then 4 USD a month, 35 USD a year, or 99 USD lifetime."}{" "}
+            ? t("home.passOpen")
+            : t("home.passDefault")}{" "}
         <Link to="/pass" className="text-copper">
-          The pass
+          {t("home.thePass")}
         </Link>
         {" · "}
         <Link to="/faq" className="text-copper">
-          Sources and patents
+          {t("home.sourcesPatents")}
         </Link>
       </p>
 

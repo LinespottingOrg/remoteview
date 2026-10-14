@@ -3,16 +3,18 @@ import { useState } from "react";
 import { drills, stages, vocab } from "@/data/method";
 import { Access } from "@/components/pass-offer";
 import { Shell, Kicker } from "@/components/shell";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/method")({ component: MethodPage });
 
 const ACTIONS = [
-  { id: "data", label: "Write as data" },
-  { id: "aol", label: "Box as AOL" },
-  { id: "stop", label: "Stop the session" },
+  { id: "data", label: "method.writeAsData" },
+  { id: "aol", label: "method.boxAsAol" },
+  { id: "stop", label: "method.stopSession" },
 ] as const;
 
 function MethodPage() {
+  const { t } = useI18n();
   const [open, setOpen] = useState("I");
   const [picks, setPicks] = useState<Record<string, string>>({});
   const stage = stages.find((item) => item.id === open) ?? stages[0]!;
@@ -21,14 +23,11 @@ function MethodPage() {
   return (
     <Shell>
       <Access>
-      <Kicker>Method</Kicker>
+      <Kicker>{t("method.kicker")}</Kicker>
       <h1 className="mt-3 max-w-3xl font-serif text-4xl leading-tight font-medium text-fg md:text-5xl">
-        Six stages. Low information first.
+        {t("method.title")}
       </h1>
-      <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
-        The declassified stage chart runs from a major gestalt to a three-dimensional model. The working rule
-        between them is the same: objectify, and do not let a noun drive.
-      </p>
+      <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">{t("method.lede")}</p>
 
       <div className="mt-8 flex gap-2 overflow-x-auto pb-1">
         {stages.map((item) => (
@@ -41,22 +40,22 @@ function MethodPage() {
               (item.id === open ? "border-copper bg-surface text-fg" : "border-line text-muted")
             }
           >
-            Stage {item.id}
+            {t("method.stage", { id: item.id })}
           </button>
         ))}
       </div>
 
       <article className="mt-4 border-t border-line pt-5">
-        <p className="text-xs font-medium uppercase tracking-widest text-copper">Stage {stage.id}</p>
+        <p className="text-xs font-medium uppercase tracking-widest text-copper">{t("method.stage", { id: stage.id })}</p>
         <h2 className="mt-2 font-serif text-3xl text-fg">{stage.name}</h2>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">{stage.aim}</p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <div>
-            <h3 className="text-sm font-medium text-fg">Write</h3>
+            <h3 className="text-sm font-medium text-fg">{t("method.write")}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted">{stage.write}</p>
           </div>
           <div>
-            <h3 className="text-sm font-medium text-fg">Do not write</h3>
+            <h3 className="text-sm font-medium text-fg">{t("method.doNotWrite")}</h3>
             <p className="mt-2 text-sm leading-relaxed text-muted">{stage.avoid}</p>
           </div>
         </div>
@@ -64,7 +63,7 @@ function MethodPage() {
       </article>
 
       <section className="mt-12">
-        <h2 className="font-serif text-2xl text-fg">The only legal nouns at stage I</h2>
+        <h2 className="font-serif text-2xl text-fg">{t("method.nounsTitle")}</h2>
         <ul className="mt-4 flex flex-wrap gap-2">
           {vocab.map((word) => (
             <li key={word} className="rounded-sm border border-line px-3 py-2 text-sm text-fg">
@@ -72,19 +71,15 @@ function MethodPage() {
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-sm text-faint">Anything more specific is analytical overlay until feedback says otherwise.</p>
+        <p className="mt-3 text-sm text-faint">{t("method.nounsNote")}</p>
       </section>
 
       <section className="mt-12">
         <div className="flex items-baseline justify-between gap-4">
-          <h2 className="font-serif text-2xl text-fg">Sort the line</h2>
-          <p className="text-sm text-faint">
-            {solved} of {drills.length}
-          </p>
+          <h2 className="font-serif text-2xl text-fg">{t("method.sortTitle")}</h2>
+          <p className="text-sm text-faint">{t("method.sortProgress", { solved, total: drills.length })}</p>
         </div>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-          Seven things a viewer might write. Decide before you read the reason.
-        </p>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{t("method.sortLede")}</p>
         <ol className="mt-6 space-y-6">
           {drills.map((drill, index) => {
             const pick = picks[drill.id];
@@ -116,7 +111,7 @@ function MethodPage() {
                                 : "border-line text-muted")
                         }
                       >
-                        {action.label}
+                        {t(action.label)}
                       </button>
                     );
                   })}
@@ -129,10 +124,9 @@ function MethodPage() {
       </section>
 
       <p className="mt-12 max-w-2xl text-sm leading-relaxed text-faint">
-        Overlay is a writing rule. The course also refuses five uses of the method itself — people, medicine, legal
-        claims, money, and borrowed stamps.{" "}
+        {t("method.overlayNote")}{" "}
         <Link to="/" hash="exclusions" className="text-copper">
-          Read the exclusions, and why.
+          {t("method.readExclusions")}
         </Link>
       </p>
       </Access>

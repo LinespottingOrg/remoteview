@@ -1,13 +1,12 @@
 import { exclusions } from "@/data/exclusions";
+import { useI18n } from "@/lib/i18n";
 
 export function Exclusions() {
+  const { t } = useI18n();
   return (
     <section id="exclusions" className="mt-12">
-      <h2 className="font-serif text-2xl text-fg">What this course will not do</h2>
-      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
-        Five exclusions. Each one is a line, and a reason the line stays. The method is easy to point at a life.
-        This course refuses that use.
-      </p>
+      <h2 className="font-serif text-2xl text-fg">{t("exclusions.title")}</h2>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">{t("exclusions.lede")}</p>
       <ol className="mt-6 divide-y divide-line border-y border-line">
         {exclusions.map((item, index) => (
           <li key={item.id} className="py-5">
